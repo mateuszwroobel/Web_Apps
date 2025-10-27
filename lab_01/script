@@ -1,5 +1,5 @@
 # the html code which will go in the file GFG.html
-html_template =
+html_template = " 
 <!DOCTYPE html>
 """
 <html lang="pl">
