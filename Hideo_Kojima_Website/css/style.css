@@ -152,7 +152,7 @@ footer {
 }
 
 .kojima-hero h1 {
-    font-size: 4rem;
+    font-size: 6rem;
     line-height: 1;
     margin-bottom: 1rem;
 }
@@ -180,7 +180,6 @@ footer {
 }
 
 
-/* ----- Sekcje Gier (jedna gra na stronę) ----- */
 .game-section {
     height: 500px; 
     display: flex;
@@ -199,7 +198,6 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    /* Jasny gradient */
     background: linear-gradient(to right, rgba(255, 253, 242, 0.9) 0%, rgba(255, 253, 242, 0.7) 50%, rgba(255, 253, 242, 0.9) 100%);
     z-index: 1;
 }
@@ -268,15 +266,22 @@ footer {
     transform: scale(1.05);
 }
 
-.video-container {
-    margin-top: 3rem;
-    text-align: center;
+.video-responsive-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 56.25%; /* To jest 9 / 16 = 0.5625 */
+    border-radius: 8px;
+    border: 2px solid var(--accent-color); /* Przenosimy ramkę tutaj */
 }
 
-.video-container video {
-    max-width: 100%;
-    border-radius: 8px;
-    border: 2px solid var(--accent-color); /* Czarna ramka */
+/* 2. Sam odtwarzacz YouTube, który wypełnia wrapper */
+.video-responsive-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .contact-form {
