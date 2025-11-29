@@ -86,27 +86,37 @@
             });
         }
 
-        // 3. Logika filtrowania i sortowania
-        function filterAndSort() {
+// 3. Logika filtrowania i sortowania (Best Practices)
+function filterAndSort() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const sortMode = document.getElementById('sortSelect').value;
 
-            // Krok A: Filtrowanie (filter)
-            // Szukamy w tytule LUB opisie
+            // KROK 1: FILTROWANIE
+            // .filter() tworzy nową tablicę (płytką kopię), więc originalData jest bezpieczne.
+            // Tworzymy zmienną lokalną 'processedData'.
             let processedData = originalData.filter(item => 
                 item.title.toLowerCase().includes(searchTerm) || 
                 item.description.toLowerCase().includes(searchTerm)
             );
 
-            // Krok B: Sortowanie (sort)
-            // Używamy spread operator [...], żeby nie mutować przefiltrowanej tablicy w miejscu, choć tutaj to bezpieczne
-            if (sortMode === 'asc') {
-                processedData.sort((a, b) => a.title.localeCompare(b.title));
-            } else if (sortMode === 'desc') {
-                processedData.sort((a, b) => b.title.localeCompare(a.title));
+            // KROK 2: SORTOWANIE
+            // sort() działa "in-place" (zmienia tablicę, na której jest wywoływany).
+            // Mimo że processedData to już nowa tablica (z filtra), 
+            // dobrą praktyką jest jawne utworzenie kopii przed sortowaniem,
+            // zwłaszcza jeśli w przyszłości usunęlibyśmy filtr.
+            
+            if (sortMode !== 'original') {
+                // [...processedData] tworzy nową tablicę z elementów starej
+                processedData = [...processedData].sort((a, b) => {
+                    if (sortMode === 'asc') {
+                        return a.title.localeCompare(b.title);
+                    } else {
+                        return b.title.localeCompare(a.title);
+                    }
+                });
             }
-            // Jeśli 'original', nie robimy nic z kolejnością
 
+            // KROK 3: Renderujemy KOPIĘ danych, a nie oryginał
             renderTable(processedData);
         }
 
