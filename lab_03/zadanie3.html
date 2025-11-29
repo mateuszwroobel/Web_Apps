@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadanie 3 - API Products</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .controls { margin-bottom: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; }
+        input, select { padding: 8px; margin-right: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #333; color: white; }
+        img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Filtruj (tytuł lub opis)...">
+        <select id="sortSelect">
+            <option value="original">Oryginalna kolejność</option>
+            <option value="asc">Rosnąco (A-Z)</option>
+            <option value="desc">Malejąco (Z-A)</option>
+        </select>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Zdjęcie</th>
+                <th>Tytuł</th>
+                <th>Opis</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+
+    <script>
+        let originalData = []; // Tutaj przechowamy pobrane dane
+
+        // 1. Pobieranie danych (async/await)
+        async function fetchProducts() {
+            try {
+                const response = await fetch('https://dummyjson.com/products');
+                const data = await response.json();
+                
+                // Bierzemy tylko pierwsze 30 elementów
+                originalData = data.products.slice(0, 30);
+                
+                // Pierwsze renderowanie
+                renderTable(originalData);
+            } catch (error) {
+                console.error("Błąd pobierania danych:", error);
+                alert("Nie udało się pobrać danych.");
+            }
+        }
+
+        // 2. Funkcja renderująca tabelę (createElement / appendChild)
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = ""; // Czyścimy stare elementy (zgodnie z instrukcją)
+
+            data.forEach(product => {
+                const tr = document.createElement('tr');
+
+                // Kolumna Zdjęcie
+                const tdImg = document.createElement('td');
+                const img = document.createElement('img');
+                img.src = product.thumbnail;
+                img.alt = product.title;
+                tdImg.appendChild(img);
+                tr.appendChild(tdImg);
+
+                // Kolumna Tytuł
+                const tdTitle = document.createElement('td');
+                tdTitle.textContent = product.title;
+                tr.appendChild(tdTitle);
+
+                // Kolumna Opis
+                const tdDesc = document.createElement('td');
+                tdDesc.textContent = product.description;
+                tr.appendChild(tdDesc);
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 3. Logika filtrowania i sortowania
+        function filterAndSort() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sortMode = document.getElementById('sortSelect').value;
+
+            // Krok A: Filtrowanie (filter)
+            // Szukamy w tytule LUB opisie
+            let processedData = originalData.filter(item => 
+                item.title.toLowerCase().includes(searchTerm) || 
+                item.description.toLowerCase().includes(searchTerm)
+            );
+
+            // Krok B: Sortowanie (sort)
+            // Używamy spread operator [...], żeby nie mutować przefiltrowanej tablicy w miejscu, choć tutaj to bezpieczne
+            if (sortMode === 'asc') {
+                processedData.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortMode === 'desc') {
+                processedData.sort((a, b) => b.title.localeCompare(a.title));
+            }
+            // Jeśli 'original', nie robimy nic z kolejnością
+
+            renderTable(processedData);
+        }
+
+        // Dodanie Event Listenerów
+        document.getElementById('searchInput').addEventListener('input', filterAndSort);
+        document.getElementById('sortSelect').addEventListener('change', filterAndSort);
+
+        // Start
+        fetchProducts();
+    </script>
+</body>
+</html>

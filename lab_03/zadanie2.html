@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadanie 2 - Generator Haseł</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 400px; margin: 0 auto; }
+        label { display: block; margin-top: 10px; }
+        input[type="number"] { width: 100%; padding: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+    </style>
+</head>
+<body>
+
+    <h2>Generator Haseł</h2>
+
+    <label>Minimalna długość:
+        <input type="number" id="minLen" value="8">
+    </label>
+
+    <label>Maksymalna długość:
+        <input type="number" id="maxLen" value="12">
+    </label>
+
+    <label>
+        <input type="checkbox" id="useUppercase"> Zawierać wielkie litery?
+    </label>
+
+    <label>
+        <input type="checkbox" id="useSpecial"> Zawierać znaki specjalne?
+    </label>
+
+    <button id="generateBtn">Wygeneruj hasło</button>
+
+    <script>
+        const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+        const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+        const numbers = "0123456789"; // Opcjonalnie dodajemy cyfry domyślnie
+
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const minLen = parseInt(document.getElementById('minLen').value);
+            const maxLen = parseInt(document.getElementById('maxLen').value);
+            const useUpper = document.getElementById('useUppercase').checked;
+            const useSpecial = document.getElementById('useSpecial').checked;
+
+            if (minLen > maxLen) {
+                alert("Błąd: Minimalna długość nie może być większa od maksymalnej!");
+                return;
+            }
+
+            // Budowanie puli dostępnych znaków
+            let availableChars = lowercaseChars + numbers;
+            if (useUpper) availableChars += uppercaseChars;
+            if (useSpecial) availableChars += specialChars;
+
+            // Losowanie długości hasła
+            const passwordLength = Math.floor(Math.random() * (maxLen - minLen + 1)) + minLen;
+
+            let password = "";
+            for (let i = 0; i < passwordLength; i++) {
+                const randomIndex = Math.floor(Math.random() * availableChars.length);
+                password += availableChars[randomIndex];
+            }
+
+            alert("Wygenerowane hasło: " + password);
+        });
+    </script>
+</body>
+</html>
