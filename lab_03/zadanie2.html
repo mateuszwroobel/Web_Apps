@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Zadanie 2 - Generator Haseł</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 400px; margin: 0 auto; }
+        body { font-family: sans-serif; padding: 20px; max-width: 400px;}
         label { display: block; margin-top: 10px; }
-        input[type="number"] { width: 100%; padding: 5px; box-sizing: border-box; }
-        button { margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+        input[type="number"] { width: 100%; box-sizing: border-box; }
+        button { margin-top: 20px; font-size: 16px; cursor: pointer; background-color: #4CAF50; color: white; border: none; }
     </style>
 </head>
 <body>
@@ -36,25 +36,27 @@
         const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
         const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
-        const numbers = "0123456789"; // Opcjonalnie dodajemy cyfry domyślnie
+        const numbers = "0123456789";
 
         document.getElementById('generateBtn').addEventListener('click', () => {
-            const minLen = parseInt(document.getElementById('minLen').value);
+            const minLen = parseInt(document.getElementById('minLen').value);//value zwraca stringa - castujemy na inta
             const maxLen = parseInt(document.getElementById('maxLen').value);
             const useUpper = document.getElementById('useUppercase').checked;
-            const useSpecial = document.getElementById('useSpecial').checked;
+            const useSpecial = document.getElementById('useSpecial').checked;//checked zwraca stala boolowska 
 
             if (minLen > maxLen) {
                 alert("Błąd: Minimalna długość nie może być większa od maksymalnej!");
                 return;
             }
 
-            // Budowanie puli dostępnych znaków
+            //pula dostępnych znaków
             let availableChars = lowercaseChars + numbers;
             if (useUpper) availableChars += uppercaseChars;
             if (useSpecial) availableChars += specialChars;
-
-            // Losowanie długości hasła
+            //obliczanie dlugosci:
+            //random zwraca od 0.0 do 1.0
+            // skalujemy ulamek na dlugosc przedzialu
+            //dodajemy minimum
             const passwordLength = Math.floor(Math.random() * (maxLen - minLen + 1)) + minLen;
 
             let password = "";

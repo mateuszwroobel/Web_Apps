@@ -37,34 +37,33 @@
     </table>
 
     <script>
-        let originalData = []; // Tutaj przechowamy pobrane dane
+        let originalData = []; //pobrane dane
 
-        // 1. Pobieranie danych (async/await)
+        //pobieranie danych (async/await)
         async function fetchProducts() {
             try {
                 const response = await fetch('https://dummyjson.com/products');
                 const data = await response.json();
                 
-                // Bierzemy tylko pierwsze 30 elementów
+                //pierwsze 30 elementow
                 originalData = data.products.slice(0, 30);
                 
-                // Pierwsze renderowanie
+                // pierwsze renderowanie
                 renderTable(originalData);
             } catch (error) {
                 console.error("Błąd pobierania danych:", error);
-                alert("Nie udało się pobrać danych.");
             }
         }
 
-        // 2. Funkcja renderująca tabelę (createElement / appendChild)
+        // 2. Funkcja renderujaca tabele (createElement / appendChild)
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = ""; // Czyścimy stare elementy (zgodnie z instrukcją)
+            tbody.innerHTML = ""; // czyscimy stare elementy
 
             data.forEach(product => {
                 const tr = document.createElement('tr');
 
-                // Kolumna Zdjęcie
+                // kolumna Zdjęcie
                 const tdImg = document.createElement('td');
                 const img = document.createElement('img');
                 img.src = product.thumbnail;
@@ -72,12 +71,12 @@
                 tdImg.appendChild(img);
                 tr.appendChild(tdImg);
 
-                // Kolumna Tytuł
+                // kolumna Tytul
                 const tdTitle = document.createElement('td');
                 tdTitle.textContent = product.title;
                 tr.appendChild(tdTitle);
 
-                // Kolumna Opis
+                // kolumna Opis
                 const tdDesc = document.createElement('td');
                 tdDesc.textContent = product.description;
                 tr.appendChild(tdDesc);
@@ -86,27 +85,19 @@
             });
         }
 
-// 3. Logika filtrowania i sortowania (Best Practices)
-function filterAndSort() {
+        function filterAndSort() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const sortMode = document.getElementById('sortSelect').value;
 
-            // KROK 1: FILTROWANIE
-            // .filter() tworzy nową tablicę (płytką kopię), więc originalData jest bezpieczne.
-            // Tworzymy zmienną lokalną 'processedData'.
+        
+            // filter tworzy kopie
             let processedData = originalData.filter(item => 
                 item.title.toLowerCase().includes(searchTerm) || 
                 item.description.toLowerCase().includes(searchTerm)
             );
 
-            // KROK 2: SORTOWANIE
-            // sort() działa "in-place" (zmienia tablicę, na której jest wywoływany).
-            // Mimo że processedData to już nowa tablica (z filtra), 
-            // dobrą praktyką jest jawne utworzenie kopii przed sortowaniem,
-            // zwłaszcza jeśli w przyszłości usunęlibyśmy filtr.
-            
+            //sortowanie
             if (sortMode !== 'original') {
-                // [...processedData] tworzy nową tablicę z elementów starej
                 processedData = [...processedData].sort((a, b) => {
                     if (sortMode === 'asc') {
                         return a.title.localeCompare(b.title);
@@ -116,15 +107,13 @@ function filterAndSort() {
                 });
             }
 
-            // KROK 3: Renderujemy KOPIĘ danych, a nie oryginał
+            // Renderujemy kopie danych
             renderTable(processedData);
         }
 
-        // Dodanie Event Listenerów
         document.getElementById('searchInput').addEventListener('input', filterAndSort);
         document.getElementById('sortSelect').addEventListener('change', filterAndSort);
 
-        // Start
         fetchProducts();
     </script>
 </body>
